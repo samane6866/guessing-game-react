@@ -88,3 +88,7 @@ p {
   font-size: 20px;
   text-align: center;
 }
+.lowOrHi {
+  color: purple;
+  font-size: 37px;
+}
