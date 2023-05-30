@@ -4,28 +4,38 @@ function random() {
   return Math.floor(Math.random() * 10 + 1);
 }
 function App() {
+  // lo usaremos para saber si el usuario ha introducido un numero más alto o más bajo. Además nos servirá si el usuario agota todos los intentos, para mostrarlo
   const [numberRandom, setNumberRandom] = useState(random());
+  // del input
   const [valorInput, setValorInput] = useState(" ");
-  const [restTry, setRestTry] = useState(1);
+  // tendremos que decrementar uno cada vez que el usuario introduzca un número
+  const [restTry, setRestTry] = useState(5);
+  // [4, 40, 20]
   const [previousGuess, setPreviousGuess] = useState([]);
+  // 'el número es menor' o 'el número es mayor'
   const [message, setShowMessage] = useState(" ");
 
   function handelValorIniciar() {
+    const updateGuesses = [...previousGuess, +valorInput];
+    setPreviousGuess(updateGuesses);
+    setValorInput(" ");
+
     console.log(valorInput, numberRandom);
     if (valorInput > numberRandom) {
       setShowMessage("is too high");
+      setRestTry(restTry - 1);
     } else if (valorInput < numberRandom) {
       setShowMessage("is to low");
+      setRestTry(restTry - 1);
     }
-
-    setRestTry(restTry - 1);
-    if (setRestTry === 0) {
-      setShowMessage("YOU CAN CONTUNUE ANY MORE");
-    }
-
-    setPreviousGuess([...previousGuess, valorInput]);
-
-    setValorInput(" ");
+  }
+  // si la variable de estado es 0, es que ya hemos perdido!
+  if (restTry === 0) {
+    return <h1>Lo siento! el número era {numberRandom}</h1>;
+  }
+  // Si el array de preivousGuesses incluye en algún momento el número correcto, entonces podemos decir uqe hemos ganado
+  if (previousGuess.includes(numberRandom)) {
+    return <h1>¡Has ganado!</h1>;
   }
 
   return (
@@ -39,7 +49,7 @@ function App() {
           Guess a number
         </label>
         <input
-          type="text"
+          type="number"
           id="guessField"
           max={100}
           min={0}
@@ -53,7 +63,7 @@ function App() {
 
         <div className="resultParas">
           <p>
-            Previous Guesses:{" "}
+            Previous Guesses:
             <span className="guesses">{previousGuess.join(",")}</span>
           </p>
           <p>
